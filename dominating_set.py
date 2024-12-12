@@ -36,7 +36,6 @@ def find_dominating_set_local(graph):
     return dominating_set
 
 def is_dominating_set(graph, nodes):
-    """Checks if the given set of nodes is a dominating set."""
     covered_nodes = set(nodes)
     for node in nodes:
         covered_nodes.update(graph.neighbors(node))
