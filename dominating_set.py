@@ -52,29 +52,51 @@ def create_random_graph(num_nodes, edge_prob):
     return graph
 
 # Parameters for the random graph
-num_nodes = 10
+num_nodes = 400
 edge_prob = 0.3
 
-# Generate the random graph
-graph = create_random_graph(num_nodes, edge_prob)
+# Initialize variables to store total time
+total_greedy_time = 0
+total_local_time = 0
 
-# Create a NetworkX graph from the dictionary
-G = nx.Graph(graph)
-G_local = nx.Graph(graph)
+# Initialize lists to store dominating sets
+dominating_sets = []
+dominating_sets_local = []
 
-# Measure time for the greedy algorithm
-start_time = time.time()
-dominating_set = find_dominating_set(graph)
-greedy_time = time.time() - start_time
+# Run the algorithms 10 times
+for _ in range(10):
+    # Generate the random graph
+    graph = create_random_graph(num_nodes, edge_prob)
 
-# Measure time for the local search algorithm
-start_time = time.time()
-dominating_set_local = find_dominating_set_local(G_local)
-local_time = time.time() - start_time
+    # Create a NetworkX graph from the dictionary
+    G = nx.Graph(graph)
+    G_local = nx.Graph(graph)
+
+    # Measure time for the greedy algorithm
+    start_time = time.time()
+    dominating_set = find_dominating_set(graph)
+    greedy_time = (time.time() - start_time) * 1000  # Convert to milliseconds
+    total_greedy_time += greedy_time
+    dominating_sets.append(dominating_set)
+
+    # Measure time for the local search algorithm
+    start_time = time.time()
+    dominating_set_local = find_dominating_set_local(G_local)
+    local_time = (time.time() - start_time) * 1000  # Convert to milliseconds
+    total_local_time += local_time
+    dominating_sets_local.append(dominating_set_local)
+
+# Calculate average times
+average_greedy_time = total_greedy_time / 10
+average_local_time = total_local_time / 10
+
+# Use the last generated graph for visualization
+dominating_set = dominating_sets[-1]
+dominating_set_local = dominating_sets_local[-1]
 
 
-print("Time to complete greedy algorithm: {:.6f} seconds".format(greedy_time))
-print("Time to complete local search algorithm: {:.6f} seconds".format(local_time))
+print("Time to complete greedy algorithm average: {:.6f} seconds".format(average_greedy_time))
+print("Time to complete local search algorithm average: {:.6f} seconds".format(average_local_time))
 print("Dominating Set:", dominating_set)
 print("Dominating Set Local:", dominating_set_local)
 
